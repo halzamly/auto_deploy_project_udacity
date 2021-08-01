@@ -13,8 +13,11 @@ commands:
           name: Destroy environments
           when: on_fail
           command: |
-            # Your code here
-            exit 1
+            aws s3 rm --recursive s3://udapeople-alzamly2507
+            aws cloudformation delete-stack \
+              --stack-name backend-infra-"${CIRCLE_WORKFLOW_ID:0:7}"
+            aws cloudformation delete-stack \
+              --stack-name frontend-infra-"${CIRCLE_WORKFLOW_ID:0:7}"
 
   revert-migrations:
     description: Revert the last migration if successfully run in the current workflow.
@@ -156,23 +159,23 @@ jobs:
           command: |
             aws cloudformation deploy \
               --template-file .circleci/files/backend.yml \
-              --tags project=udacity-project-backend \
               --stack-name backend-infra-"${CIRCLE_WORKFLOW_ID:0:7}" \
-              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
+              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" \
+              --tags project=autodeploy
       - run:
           name: Ensure front-end infrastructure exist
           command: |
             aws cloudformation deploy \
               --template-file .circleci/files/frontend.yml \
-              --tags project=udacity-project-frontend \
               --stack-name frontend-infra-"${CIRCLE_WORKFLOW_ID:0:7}" \
-              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
+              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" \
+              --tags project=autodeploy
       - run:
           name: Add back-end ip to ansible inventory
           command: |
             aws ec2 describe-instances \
             --query 'Reservations[*].Instances[*].PublicIpAddress' \
-            --filters "Name=tag:project,Values=udacity-project-backend" \
+            --filters "Name=tag:project,Values=autodeploy" \
             --output text >> .circleci/ansible/inventory.txt
             cat .circleci/ansible/inventory.txt
       - run: apt -y install tar
