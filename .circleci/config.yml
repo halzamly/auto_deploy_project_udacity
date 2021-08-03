@@ -178,7 +178,6 @@ jobs:
             --filters "Name=tag:project,Values=autodeploy" \
             --output text >> .circleci/ansible/inventory.txt
             cat .circleci/ansible/inventory.txt
-      - run: apt -y install tar
       - persist_to_workspace:
           root: ~/
           paths:
