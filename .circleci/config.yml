@@ -250,7 +250,10 @@ jobs:
           command: |
             cd frontend
             npm run build
-      - aws-cli/setup
+      - run:
+          name: Install AWS CLI
+          command: |
+            apk add --update py3-pip && pip3 install --upgrade pip && pip3 install awscli
       - run:
           name: Deploy frontend objects
           command: |
