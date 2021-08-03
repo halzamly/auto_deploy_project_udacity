@@ -27,7 +27,7 @@ commands:
           when: on_fail
           command: |
             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
-            export SUCCESS = $(curl -H "token: << pipeline.parameters.memstash-token >>" --request GET https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID})
+            export SUCCESS = $(curl -H "token: a38f29ef-cf6b-4823-baec-2827033c9a48" --request GET https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID})
             if(( $SUCCESS==1 )); 
             then
               cd ~/project/backend
@@ -222,7 +222,7 @@ jobs:
           name: Send migration results to memstash
           command: |
             curl -H "Content-Type: text/plain" \
-              -H "token: << pipeline.parameters.memstash-token >>" \
+              -H "token: a38f29ef-cf6b-4823-baec-2827033c9a48" \
               --request PUT --data "1" \
               https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
       - revert-migrations
