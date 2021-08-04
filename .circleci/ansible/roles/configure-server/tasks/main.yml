@@ -20,6 +20,8 @@
 
 - name: Configure environment variables
   become: true
+  shell: |
+    pm2 start  npm -- run start:prod
   environment:
       NODE_ENV: production
       ENVIRONMENT: production
