@@ -2,6 +2,7 @@ version: 2.1
 
 orbs:
   slack: circleci/slack@4.4.2
+  aws-cli: circleci/aws-cli@2.0.3
 
 commands:
   destroy-environment:
@@ -223,6 +224,7 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
+      - aws-cli/setup
       - run:
           name: Run migrations
           command: |
@@ -240,11 +242,6 @@ jobs:
               -H "token: a38f29ef-cf6b-4823-baec-2827033c9a48" \
               --request PUT --data "1" \
               https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
-      - run:
-          name: Install AWS CLI for rollback
-          when: on_fail
-          command: |
-            apk add --update py3-pip && pip3 install --upgrade pip && pip3 install awscli    
       - revert-migrations
       - destroy-environment    
 
@@ -270,10 +267,7 @@ jobs:
           command: |
             cd frontend
             npm run build
-      - run:
-          name: Install AWS CLI
-          command: |
-            apk add --update py3-pip && pip3 install --upgrade pip && pip3 install awscli
+      - aws-cli/setup
       - run:
           name: Deploy frontend objects
           command: |
