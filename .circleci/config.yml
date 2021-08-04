@@ -216,6 +216,11 @@ jobs:
       - run:
           name: Run migrations
           command: |
+            echo "${TYPEORM_HOST}"
+            echo "${$TYPEORM_PORT}"
+            echo "${$TYPEORM_USERNAME}"
+            echo "${TYPEORM_PASSWORD}"
+            echo "${$TYPEORM_DATABASE}"
             echo ENVIRONMENT=production > "backend/.env"
             echo TYPEORM_CONNECTION=postgres >> "backend/.env"
             echo TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts >> "backend/.env"
