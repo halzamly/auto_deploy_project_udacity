@@ -234,15 +234,22 @@ jobs:
             npm install
             npm run migrations > migration.log
             cat migration.log
-            migration_status=$(cat migration.log | grep -c "has been executed successfully")
-            if [ $migration_status > 0 ]; then exit 0; else exit 1; fi;
       - run:
           name: Send migration results to memstash
           command: |
+           migration_status=$(cat migration.log | grep -c "has been executed successfully")
+           if [ $migration_status > 0 ]; 
+            then
             curl -H "Content-Type: text/plain" \
               -H "token: a38f29ef-cf6b-4823-baec-2827033c9a48" \
               --request PUT --data "1" \
               https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
+            else
+            curl -H "Content-Type: text/plain" \
+              -H "token: a38f29ef-cf6b-4823-baec-2827033c9a48" \
+              --request PUT --data "0" \
+              https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
+            fi
       - revert-migrations
       - destroy-environment    
 
