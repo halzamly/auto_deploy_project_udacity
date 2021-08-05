@@ -75,6 +75,9 @@ jobs:
       - save_cache:
           paths: [backend/node_modules]
           key: backend-build
+      - save_cache:
+          paths: [backend/dist]
+          key: backend-dist
       - slack/notify:
           channel: C029DJUE9JB
           event: fail
@@ -295,9 +298,7 @@ jobs:
       - run:
           name: Deploy backend
           command: |
-            cd backend
-            ls dist
-            tar -czvf dist.tar.gz dist
+            tar czf dist.tar.gz -P /home/circleci/project/backend/dist
             mkdir -p ~/project/.circleci/ansible/roles/deploy/files/
             mv dist.tar.gz  ~/project/.circleci/ansible/roles/deploy/files/
             cp -f ~/project/backend/package.json  ~/project/.circleci/ansible/roles/deploy/files/
