@@ -216,12 +216,6 @@ jobs:
       - run:
           name: Run migrations
           command: |
-            echo "${TYPEORM_HOST}"
-            echo "${TYPEORM_PORT}"
-            echo "${TYPEORM_USERNAME}"
-            echo "${TYPEORM_PASSWORD}"
-            echo "${TYPEORM_DATABASE}"
-
             cd backend 
             touch .env
 
