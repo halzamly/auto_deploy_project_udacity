@@ -288,14 +288,17 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            apk add --update ansible openssh-client tar gzip 
+            apk add --update ansible openssh-client tar gzip curl
       - restore_cache:
           keys: ["backend-dist"]  
       - run:
           name: Deploy backend
           command: |
-            cd /home
-            tar czf backend.tar.gz -P /home/circleci/project/backend/dist
+            ls dist
+            tar -czvf dist.tar.gz dist
+            mkdir -p ~/project/.circleci/ansible/roles/deploy/files/
+            mv dist.tar.gz  ~/project/.circleci/ansible/roles/deploy/files/
+            cp -f ~/project/backend/package.json  ~/project/.circleci/ansible/roles/deploy/files/
       - run:
           name: Deploy backend 2
           command: |
