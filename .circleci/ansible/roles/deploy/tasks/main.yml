@@ -1,24 +1,26 @@
 - name: "Copy compiled backend app"
   become: true
   copy:
-    src: backend.tar.gz
+    src: dist.tar.gz
     dest: /home/ubuntu
 
 - name: "Unzip backend files to correct directory"
   shell: |
-      cd /home/ubuntu      
-      #mkdir backend
-      #mv backend.tar.gz backend/backend.tar.gz
-      #cd backend
-      tar -xzvf backend.tar.gz
+      cd /home/ubuntu
+      tar -xzvf dist.tar.gz
+
+- name: "Copy package.json"
+  become: true
+  copy:
+    src: package.json
+    dest: /home/ubuntu/dist
 
 - name: "Install dependencies for project"
   shell: |
-    cd /home/ubuntu/backend
+    cd /home/ubuntu/dist
     npm install
-    npm run build
 
 - name: Start PM2
   shell: |
-    cd /home/ubuntu/backend
-    pm2 start npm --name backend -- start
+    cd /home/ubuntu/dist
+    pm2 start main.js --name udapeople-backend
