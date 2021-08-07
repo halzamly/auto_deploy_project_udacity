@@ -301,8 +301,7 @@ jobs:
             tar czvf backend.tar.gz backend
             ls
             mkdir -p ~/project/.circleci/ansible/roles/deploy/files/
-            mv dist.tar.gz  ~/project/.circleci/ansible/roles/deploy/files/
-            cp -f ~/project/backend/package.json  ~/project/.circleci/ansible/roles/deploy/files/
+            mv backend.tar.gz  ~/project/.circleci/ansible/roles/deploy/files/
             ls ~/project/.circleci/ansible/roles/deploy/files/
       - run:
           name: Deploy backend 2
