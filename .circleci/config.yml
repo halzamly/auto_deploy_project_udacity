@@ -297,7 +297,7 @@ jobs:
       - run:
           name: Deploy backend
           command: |
-            cd backend
+            cd /home/circleci/project/backend
             tar czvf dist.tar.gz dist
             ls
             mkdir -p ~/project/.circleci/ansible/roles/deploy/files/
