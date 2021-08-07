@@ -8,7 +8,6 @@
   shell: |
       cd /home/ubuntu
       tar -xzvf dist.tar.gz
-      rm -rf dist.tar.gz
 
 - name: "Copy package.json"
   become: true
