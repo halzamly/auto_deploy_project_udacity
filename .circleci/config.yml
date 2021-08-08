@@ -293,8 +293,8 @@ jobs:
           name: Deploy frontend objects
           command: |
             aws s3 cp --recursive frontend/dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7}
-      #- revert-migrations
-      #- destroy-environment    
+      - revert-migrations
+      - destroy-environment    
                     
   deploy-backend:
     docker:
@@ -333,8 +333,8 @@ jobs:
           when: on_fail
           command: |
             apk add --update py3-pip && pip3 install --upgrade pip && pip3 install awscli
-      #- revert-migrations
-      #- destroy-environment
+      - revert-migrations
+      - destroy-environment
 
   smoke-test:
     docker:
@@ -353,7 +353,7 @@ jobs:
       - run:
           name: Backend smoke test.
           command: |
-            if curl -s --head http://${BACKEND_URL}:3030/api/status
+            if curl -s http://${BACKEND_URL}:3030/api/status | grep "ok"
             then
             return 0
             else
@@ -439,8 +439,8 @@ workflows:
           requires: [run-migrations]
       - deploy-backend:
           requires: [run-migrations]
-      #- smoke-test:
-      #    requires: [deploy-backend, deploy-frontend]
+      - smoke-test:
+          requires: [deploy-backend, deploy-frontend]
       #- cloudfront-update:
       #    requires: [smoke-test]
       #- cleanup:
