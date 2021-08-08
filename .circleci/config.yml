@@ -348,13 +348,9 @@ jobs:
           command: |
             apk add --update curl
       - run:
-          name: Get backend url
+          name: Get backend url and Backend smoke test
           command: |
             export BACKEND_IP=$(sed -n 2p .circleci/ansible/inventory.txt)
-            echo $BACKEND_IP
-      - run:
-          name: Backend smoke test.
-          command: |
             echo $BACKEND_IP
             export API_URL="http://${BACKEND_IP}:3030/api/status"
             echo "${API_URL}"
