@@ -407,7 +407,6 @@ jobs:
               --use-previous-template \
               --stack-name cloudfront-stack \
               --parameters ParameterKey=WorkflowID,ParameterValue=${CIRCLE_WORKFLOW_ID:0:7},UsePreviousValue=false
-
       - revert-migrations
       - destroy-environment
 
@@ -417,16 +416,14 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Get old stack workflow id
+          name: Get old stack workflow id and Remove old stacks and files
           command: |
             export OldWorkflowID=$(curl -H "token: a38f29ef-cf6b-4823-baec-2827033c9a48" --request GET https://api.memstash.io/values/old_workflow_id_${CIRCLE_WORKFLOW_ID})
             echo "Old Workflow ID: ${OldWorkflowID}"
             export STACKS=$(aws cloudformation list-stacks  --query "StackSummaries[*].StackName" \
             --stack-status-filter CREATE_COMPLETE --no-paginate --output text)
             echo STACKS: "$STACKS" 
-      - run:
-          name: Remove old stacks and files
-          command: |
+
             if [[ "${STACKS[@]}" =~ "${OldWorkflowID}" ]]
             then
               aws s3 rm "s3://udapeople-${OldWorkflowID}" --recursive
@@ -434,7 +431,8 @@ jobs:
               aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID}"
               aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID}"
             fi
-            
+      - revert-migrations
+      - destroy-environment            
 
 workflows:
   default:
