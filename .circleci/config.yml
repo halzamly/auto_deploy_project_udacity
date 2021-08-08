@@ -252,17 +252,15 @@ jobs:
 
   deploy-frontend:
     docker:
-      - image: circleci/node:13.8.0
+      - image: amazon/aws-cli
     steps:
       - checkout
-      - attach_workspace:
-          at: ~/
       - run:
           name: Install dependencies
           command: |
-            cd frontend
-            sudo npm install webpack-dev-server -g
-            sudo npm install
+             yum -y install tar gzip nodejs
+      - attach_workspace:
+          at: ~/
       - run:
           name: Get backend url
           command: |
@@ -277,11 +275,18 @@ jobs:
             echo "------------------"
             cat frontend/.env
       - run:
+          name: Install dependencies
+          command: |
+            sudo npm install webpack-dev-server -g
+            cd frontend
+            sudo npm install
+      - run:
           name: Build frontend
           command: |
             cd frontend
-            npm run build
-      - aws-cli/setup
+            ls -la
+            cat .env
+            sudo npm build
       - run:
           name: Deploy frontend objects
           command: |
@@ -308,6 +313,7 @@ jobs:
           name: Deploy backend
           command: |
             cd /home/circleci/project/backend
+            cat .env
             tar czvf dist.tar.gz dist
             ls
             mkdir -p ~/project/.circleci/ansible/roles/deploy/files/
@@ -346,7 +352,7 @@ jobs:
       - run:
           name: Backend smoke test.
           command: |
-            if curl -s --head https://${BACKEND_URL}:3030/api/status
+            if curl -s --head http://${BACKEND_URL}:3030/api/status
             then
             return 0
             else
@@ -359,9 +365,9 @@ jobs:
             echo $URL
             if curl -s ${URL} | grep "Welcome"
             then
-            return 1
-            else
             return 0
+            else
+            return 1
             fi
       - run:
           name: Install AWS CLI for rollback
