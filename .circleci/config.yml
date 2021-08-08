@@ -342,7 +342,7 @@ jobs:
     steps:
       - checkout
       - attach_workspace:
-          at: .circleci/ansible/
+          at: ~/
       - run:
           name: Install dependencies
           command: |
@@ -350,12 +350,12 @@ jobs:
       - run:
           name: Get backend url
           command: |
-            export BACKEND_URL=$(sed -n 2p .circleci/ansible/inventory.txt)
-            echo $BACKEND_URL
+            export BACKEND_IP=$(sed -n 2p .circleci/ansible/inventory.txt)
+            echo BACKEND_IP
       - run:
           name: Backend smoke test.
           command: |
-            if curl -s http://${BACKEND_URL}:3030/api/status | grep "ok"
+            if curl -s http://${BACKEND_IP}:3030/api/status | grep "ok"
             then
             return 0
             else
