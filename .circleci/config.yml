@@ -258,7 +258,9 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-             yum -y install tar gzip nodejs
+             yum -y install tar gzip
+             curl -sL https://rpm.nodesource.com/setup_lts.x | bash -
+             yum -y install nodejs
       - attach_workspace:
           at: ~/
       - run:
@@ -360,7 +362,7 @@ jobs:
       - run:
           name: Frontend smoke test.
           command: |
-            URL="http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-eu-west-2.amazonaws.com"
+            URL="http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-eu-central-1.amazonaws.com"
             echo $URL
             if curl -s ${URL} | grep "Welcome"
             then
