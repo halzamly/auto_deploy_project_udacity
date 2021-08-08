@@ -5,11 +5,11 @@
     dest: /home/ubuntu
 
 - name: "Unzip backend files to correct directory"
-
   shell: |
       cd /home/ubuntu
       tar -xzvf dist.tar.gz
       rm -rf dist.tar.gz
+
 - name: "Copy compiled backend app"
   become: true
   copy:
@@ -20,6 +20,7 @@
   shell: |
     cd /home/ubuntu/dist
     npm install
+
 - name: "install pm2"
   become: true
   npm:
