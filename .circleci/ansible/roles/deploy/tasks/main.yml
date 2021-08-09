@@ -1,14 +1,20 @@
 - name: "Copy compiled backend app"
   become: true
   copy:
-    src: backend.tar.gz
+    src: dist.tar.gz
     dest: /home/ubuntu
 
 - name: "Unzip backend files to correct directory"
   shell: |
       cd /home/ubuntu
-      tar -xzvf backend.tar.gz
-      rm -rf backend.tar.gz
+      tar -xzvf dist.tar.gz
+      rm -rf dist.tar.gz
+
+- name: "Copy package.json"
+  become: true
+  copy:
+    src: package.json
+    dest: /home/ubuntu/dist
 
 - name: Install Node
   shell: |
@@ -25,11 +31,11 @@
 
 - name: Start PM2
   shell: |
-    cd /home/ubuntu/backend/dist
+    cd /home/ubuntu/dist
     export ENVIRONMENT=production
     export NODE_ENV=production
     export TYPEORM_HOST="{{ lookup('env', 'TYPEORM_HOST') }}"
-    export TYPEORM_ENTITIES=/home/ubuntu/backend/dist/modules/domain/**/*.entity.js
+    export TYPEORM_ENTITIES=/home/ubuntu/dist/modules/domain/**/*.entity.js
     export TYPEORM_USERNAME="{{ lookup('env', 'TYPEORM_USERNAME') }}"
     export TYPEORM_PASSWORD="{{ lookup('env', 'TYPEORM_PASSWORD') }}"
     export TYPEORM_DATABASE="{{ lookup('env', 'TYPEORM_DATABASE') }}"
