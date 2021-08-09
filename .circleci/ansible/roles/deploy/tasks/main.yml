@@ -25,7 +25,7 @@
 
 - name: Start PM2
   shell: |
-    cd /home/ubuntu/dist
+    cd /home/ubuntu/backend/dist
     export ENVIRONMENT=production
     export NODE_ENV=production
     export TYPEORM_HOST="{{ lookup('env', 'TYPEORM_HOST') }}"
