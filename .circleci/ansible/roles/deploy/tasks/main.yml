@@ -15,6 +15,14 @@
     cd /home/ubuntu/backend
     npm install
 
+- name: "install pm2"
+  become: true
+  npm:
+    name: pm2
+    global: yes
+    production: yes
+    state: present   
+
 - name: Start PM2
   shell: |
     cd /home/ubuntu/backend
