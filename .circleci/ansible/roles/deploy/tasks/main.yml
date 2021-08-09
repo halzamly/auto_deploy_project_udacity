@@ -1,43 +1,26 @@
 - name: "Copy compiled backend app"
   become: true
   copy:
-    src: dist.tar.gz
+    src: backend.tar.gz
     dest: /home/ubuntu
 
 - name: "Unzip backend files to correct directory"
   shell: |
       cd /home/ubuntu
-      tar -xzvf dist.tar.gz
-      rm -rf dist.tar.gz
+      tar -xzvf backend.tar.gz
+      rm -rf backend.tar.gz
 
-- name: "Copy compiled backend app"
-  become: true
-  copy:
-    src: package.json
-    dest: /home/ubuntu/dist
-
-- name: "Install dependencies for project"
+- name: Install Node
   shell: |
-    cd /home/ubuntu/dist
+    cd /home/ubuntu/backend
     npm install
 
-- name: "install pm2"
-  become: true
-  npm:
-    name: pm2
-    global: yes
-    production: yes
-    state: present   
-
-- name: "Executing node"
+- name: Build Node
   shell: |
-    cd /home/ubuntu/dist
-    export ENVIRONMENT=production
-    export NODE_ENV=production
-    export TYPEORM_HOST="{{ lookup('env', 'TYPEORM_HOST') }}"
-    export TYPEORM_ENTITIES=/home/ubuntu/dist/modules/domain/**/*.entity.js
-    export TYPEORM_USERNAME="{{ lookup('env', 'TYPEORM_USERNAME') }}"
-    export TYPEORM_PASSWORD="{{ lookup('env', 'TYPEORM_PASSWORD') }}"
-    export TYPEORM_DATABASE="{{ lookup('env', 'TYPEORM_DATABASE') }}"
-    pm2 start main.js --name udapeople-backend
-  register: execute_node
+    cd /home/ubuntu/backend
+    npm run build
+
+- name: Start PM2
+  shell: |
+    cd /home/ubuntu/backend 
+    pm2 start npm --name backend -- start
