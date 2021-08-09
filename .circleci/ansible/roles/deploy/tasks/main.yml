@@ -18,7 +18,7 @@
 
 - name: Install Node
   shell: |
-    cd /home/ubuntu/backend
+    cd /home/ubuntu/dist
     npm install
 
 - name: "install pm2"
