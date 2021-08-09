@@ -221,7 +221,6 @@ jobs:
           command: |
             cd backend 
             touch .env
-
             echo ENVIRONMENT=production >> .env
             echo TYPEORM_CONNECTION=postgres >> .env
             echo TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts >> .env
