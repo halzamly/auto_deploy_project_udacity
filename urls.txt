@@ -2,13 +2,13 @@ URL to my GitHub repository:
 https://github.com/halzamly/auto_deploy_project_udacity
 
 URL for S3 Bucket:
-http://udapeople-b313c70.s3-website.eu-central-1.amazonaws.com
+http://udapeople-282009d.s3-website.eu-central-1.amazonaws.com
 
 URL of CloudFront distribution:
 d372cjtnhwtklg.cloudfront.net
 
 URL of back-end server in EC2:
-ec2-18-185-43-68.eu-central-1.compute.amazonaws.com:3030/api/status
+ec2-3-121-116-209.eu-central-1.compute.amazonaws.com:3030/api/status
 
 URL of Prometheus Server:
 ec2-52-28-166-217.eu-central-1.compute.amazonaws.com:9090
